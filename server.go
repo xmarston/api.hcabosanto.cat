@@ -9,10 +9,6 @@ import (
 	"github.com/subosito/gotenv"
 )
 
-const (
-	AllowedXForwardedFor = "85.56.51.111, 188.114.110.183"
-)
-
 var (
 	PORT = "8443"
 	log  = logrus.New()

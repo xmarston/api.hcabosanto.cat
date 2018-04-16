@@ -4,10 +4,12 @@ import (
 	"net/http"
 	"fmt"
 	"strings"
+	"os"
 )
 
 func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Header.Get("X-Forwarded-For") == AllowedXForwardedFor {
+	allowedXForwardedFor := strings.Join(strings.Split(os.Getenv("ALLOWEDXFORWARDEDFOR"), " "), ", ")
+	if r.Header.Get("X-Forwarded-For") == allowedXForwardedFor {
 		// Create return string
 		var request []string
 
@@ -23,4 +25,24 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusForbidden)
 		w.Write([]byte("Forbidden"))
 	}
+
+	//db, err := GetDb()
+	//if err != nil {
+	//	fmt.Println(err)
+	//} else {
+	//	defer db.Close()
+	//	rows, err := db.Query("SELECT id, name FROM patients")
+	//	if err != nil {
+	//		fmt.Println(err)
+	//	}
+	//	for rows.Next() {
+	//		var id int
+	//		var name string
+	//		err = rows.Scan(&id, &name)
+	//		if err != nil {
+	//			fmt.Println(err)
+	//		}
+	//		fmt.Println(fmt.Sprintf("%d -> %s", id, name))
+	//	}
+	//}
 }
