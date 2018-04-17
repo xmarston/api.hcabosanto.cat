@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"os"
+	"api.hcabosantos.cat/types"
 )
 
 func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
@@ -26,23 +27,19 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Forbidden"))
 	}
 
-	//db, err := GetDb()
-	//if err != nil {
-	//	fmt.Println(err)
-	//} else {
-	//	defer db.Close()
-	//	rows, err := db.Query("SELECT id, name FROM patients")
-	//	if err != nil {
-	//		fmt.Println(err)
-	//	}
-	//	for rows.Next() {
-	//		var id int
-	//		var name string
-	//		err = rows.Scan(&id, &name)
-	//		if err != nil {
-	//			fmt.Println(err)
-	//		}
-	//		fmt.Println(fmt.Sprintf("%d -> %s", id, name))
-	//	}
-	//}
+	db, err := GetDb()
+	if err != nil {
+		log.Error(err)
+	} else {
+		defer db.Close()
+		var patients []types.Patient
+		err := db.Select(&patients, "SELECT * FROM patients ORDER BY surname ASC")
+		if err != nil {
+			log.Error(err)
+		} else {
+			for _, patient := range patients {
+				log.Info(fmt.Sprintf("%d -> %s with valid DNI %s -> %s", patient.Id, patient.Name, patient.Nif, patient.ValidateDni()))
+			}
+		}
+	}
 }

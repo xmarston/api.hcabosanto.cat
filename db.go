@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 	_ "github.com/go-sql-driver/mysql"
-	"database/sql"
 	"fmt"
 	"errors"
+	"github.com/jmoiron/sqlx"
 )
 
 type Database struct {
@@ -13,7 +13,7 @@ type Database struct {
 	Name       string
 	User       string
 	Password   string
-	Connection *sql.DB
+	Connection *sqlx.DB
 }
 
 func (db *Database) Init() {
@@ -28,13 +28,13 @@ func (db *Database) StartConnection() error {
 	if db.Name == "" {
 		err = errors.New("database struct no initialized")
 	} else {
-		db.Connection, err = sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s)/%s", db.User, db.Password, db.Host, db.Name))
+		db.Connection, err = sqlx.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s)/%s", db.User, db.Password, db.Host, db.Name))
 	}
 
 	return err
 }
 
-func GetDb() (*sql.DB, error) {
+func GetDb() (*sqlx.DB, error) {
 	db := Database{}
 	db.Init()
 	err := db.StartConnection()
