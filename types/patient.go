@@ -33,11 +33,11 @@ const (
 	ControlCheck = 23
 )
 
-func (p *Patient) ValidateDni() error {
+func (p *Patient) ValidateDni() (bool, error){
 	dni := p.Nif
 	numbers, err := strconv.Atoi(dni[:len(dni)-1])
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	n := float64(numbers)
@@ -46,12 +46,12 @@ func (p *Patient) ValidateDni() error {
 	modString := strconv.FormatFloat(mod, 'f', -1, 64)
 	index, err := strconv.Atoi(modString)
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	if string(DNILetters[index]) != string(dni[len(dni)-1]) {
-		return errors.New("")
+		return false, errors.New("")
 	}
 
-	return nil
+	return true, nil
 }

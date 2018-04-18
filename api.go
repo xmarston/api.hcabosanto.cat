@@ -38,7 +38,11 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 			log.Error(err)
 		} else {
 			for _, patient := range patients {
-				log.Info(fmt.Sprintf("%d -> %s with valid DNI %s -> %s", patient.Id, patient.Name, patient.Nif, patient.ValidateDni()))
+				validDNI, err := patient.ValidateDni()
+				log.Info(fmt.Sprintf("%d -> %s with valid DNI %s -> %t", patient.Id, patient.Name, patient.Nif, validDNI))
+				if err != nil {
+					log.Error(err)
+				}
 			}
 		}
 	}
