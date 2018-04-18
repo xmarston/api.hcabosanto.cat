@@ -21,6 +21,7 @@ func main() {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", WelcomeHandler)
+	r.HandleFunc("/patient/list", PatientHandler)
 
 	http.Handle("/", r)
 	log.Infof("Listen in :%s", PORT)
